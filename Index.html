@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_top">
+    <title>Check Payment Status</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://blogger.googleusercontent.com/img/a/AVvXsEjC5pzSUYsuIt6kw8TJ4wmkC_UgUgTCbskR_rbtbA4BvN2vUztEfPIpNOrZU2SUZVvv9dzO3Lpg2Le-VcT-T2RkMvmKj_5nBV4U3I2oT4UyzGuYWCuIqm-OBF-G0CFhoN8E4dWHlOiLCQxwAjxMMKsr3TZ2nj6JpE9qB2NurjkWpZtWYvER3E-T86ux_WaS" type="image/x-icon">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Oxygen, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgVdu3RQnaBuLKiWPmkiIx4s0SGEXOCbJ09VbCmwYTQbxaEM42d8e98esJPGHp4xQj81cxbj7QhPhcGSP3PruwoBGUsYadQaiqFGYXtWU-ctpPuzTo-im_WtChZn1zM-vy_ynp9bWtHetyNKF26b_rMXPOGoM3BYoauMOXcZJr865xZixneWyLCbcB-gNH1/s320/background.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        .container {
+            background-color: rgba(179, 202, 200, 0.9); /* Semi-transparent background */
+            padding-left: 20px;
+            padding-right: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1; /* Ensure it is above the background */
+        }
+
+        .logo {
+            width: 150px;
+            margin-bottom: 2px;
+        }
+
+        h2 {
+            margin-top: -25px;
+            margin-bottom: -10px;
+            color: #055852;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            width: 250px;
+            text-transform: uppercase; /* Convert text to uppercase */
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            background-color: #055852;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #044c48;
+            transform: scale(1.10);
+        }
+
+        h3 {
+            margin-top: -10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #055852;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        // Function to initialize the page and set up event listeners
+        function initialize() {
+            // Add event listener to form submission
+            document.getElementById('statusForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+                checkStatus(); // Call checkStatus function
+            });
+
+            // Add event listener to refresh button
+            document.getElementById('refreshButton').addEventListener('click', function() {
+                initialize(); // Re-initialize to reset event listeners
+                checkStatus(); // Check status again
+            });
+
+            // Add event listener to convert input to uppercase
+            document.getElementById('stateCode').addEventListener('input', function() {
+                this.value = this.value.toUpperCase(); // Convert input to uppercase
+            });
+        }
+
+        // Function to check the status
+        function checkStatus() {
+            const stateCode = document.getElementById('stateCode').value; // Get state code input value
+            const spinner = document.getElementById('spinner'); // Get spinner element
+
+            spinner.style.display = 'inline-block'; // Show spinner
+
+            google.script.run.withSuccessHandler(function(message) {
+                spinner.style.display = 'none'; // Hide spinner
+                document.getElementById('result').innerText = `Status for ${stateCode}: ${message}`; // Display result
+            }).getStatus(stateCode); // Call Google Apps Script function
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initialize(); // Initialize page
+        });
+    </script>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjt4-SgZZQCJz0MzAwdmSniHrWPg9L6NG2Hn14f13HSh1R0qj9uEqcMRMlP5tbN58hdE2XIK6KkX2tuLZ5zZpbcwHzjoYhwshBLRTvmXe9Nd4YLUfJbn93eS0SsSH7fKtVIl2Q3q8JiDviHms6sVGq1h45RjwJoy21MNYgFSCqcIkyPnEv50-j8w4PNdVVz/s3060/logo.png" alt="Logo" class="logo">
+        <h2>Check Digital Onboarders CDS Payment Status</h2>
+        <form id="statusForm">
+            <div class="search-box">
+                <input type="text" id="stateCode" name="stateCode" placeholder="Enter your State Code" required>
+                <button id="refreshButton" type="submit">Check Status</button>
+            </div>
+        </form>
+        <h3 id="result"><div id="spinner" class="spinner"></div></h3>
+    </div>
+</body>
+</html>
